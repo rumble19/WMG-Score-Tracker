@@ -4,12 +4,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Minigolf Tracker</title>
+    <title>Minigolf Tracker Admin</title>
     <script src="static/script.js" defer></script>
 </head>
 
 <body>
-    <h1>Minigolf Tracker</h1>
+    <h1>Minigolf Tracker Admin</h1>
     <form id="add-player-form">
         <h2>Add Player</h2>
         <input type="text" id="player-name" placeholder="Player Name" required>
