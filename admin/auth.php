@@ -32,3 +32,10 @@ function logout()
 {
     session_destroy();
 }
+
+function hasUsers()
+{
+    $db = get_db_connection();
+    $stmt = $db->query('SELECT COUNT(*) FROM users');
+    return $stmt->fetchColumn() > 0;
+}

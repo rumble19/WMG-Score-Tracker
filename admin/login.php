@@ -1,3 +1,12 @@
+<?php
+require 'auth.php';
+
+if (!hasUsers()) {
+    header('Location: register.php');
+    exit();
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 

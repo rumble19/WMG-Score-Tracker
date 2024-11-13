@@ -21,6 +21,7 @@ if (!isLoggedIn()) {
 <body>
     <div class="container">
         <h1 class="mt-5">Minigolf Tracker Admin</h1>
+        <a href="register.php" class="btn btn-secondary mb-4">Register New Admin</a>
         <form id="add-player-form" class="mb-4">
             <h2>Add Player</h2>
             <div class="form-group">
@@ -55,10 +56,10 @@ if (!isLoggedIn()) {
                     <select class="player-select form-control mr-2" required>
                         <option value="">Select Player</option>
                     </select>
-                    <input type="number" class="form-control player-score-input mr-2 w-25" placeholder="Score" required>
+                    <input type="number" class="form-control player-score-input mr-2" placeholder="Score" required>
                 </div>
             </div>
-            <button type="button" id="add-player-button" class="btn btn-secondary mb-3 float-right">Add Player</button>
+            <button type="button" id="add-player-button" class="btn btn-secondary mb-3">Add Player</button>
             <button type="submit" class="btn btn-primary">Submit Scores</button>
         </form>
 
