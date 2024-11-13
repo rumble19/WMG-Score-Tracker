@@ -56,10 +56,10 @@ if (!isLoggedIn()) {
                     <select class="player-select form-control mr-2" required>
                         <option value="">Select Player</option>
                     </select>
-                    <input type="number" class="form-control player-score-input mr-2" placeholder="Score" required>
+                    <input type="number" class="form-control player-score-input mr-2 w-25" placeholder="Score" required>
                 </div>
             </div>
-            <button type="button" id="add-player-button" class="btn btn-secondary mb-3">Add Player</button>
+            <button type="button" id="add-player-button" class="btn btn-secondary mb-3 float-right">Add Player</button>
             <button type="submit" class="btn btn-primary">Submit Scores</button>
         </form>
 
