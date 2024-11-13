@@ -1,12 +1,14 @@
 document.addEventListener("DOMContentLoaded", async () => {
   await populateCourses();
   await populatePlayers();
+  await populatePlayerStatsDropdown();
 });
 
 async function populateCourses() {
   const response = await fetch("get_courses.php");
   const courses = await response.json();
   const courseSelect = document.getElementById("course-select");
+  courseSelect.innerHTML = '<option value="">Select Course</option>'; // Clear existing options
   courses.forEach((course) => {
     const option = document.createElement("option");
     option.value = course.id;
@@ -20,6 +22,7 @@ async function populatePlayers() {
   const players = await response.json();
   const playerSelects = document.querySelectorAll(".player-select");
   playerSelects.forEach((select) => {
+    select.innerHTML = '<option value="">Select Player</option>'; // Clear existing options
     players.forEach((player) => {
       const option = document.createElement("option");
       option.value = player.id;
@@ -29,15 +32,28 @@ async function populatePlayers() {
   });
 }
 
+async function populatePlayerStatsDropdown() {
+  const response = await fetch("get_players.php");
+  const players = await response.json();
+  const playerSelect = document.getElementById("player-select");
+  playerSelect.innerHTML = '<option value="">Select Player</option>'; // Clear existing options
+  players.forEach((player) => {
+    const option = document.createElement("option");
+    option.value = player.id;
+    option.textContent = player.name;
+    playerSelect.appendChild(option);
+  });
+}
+
 document.getElementById("add-player-button").addEventListener("click", () => {
   const playersContainer = document.getElementById("players-container");
   const playerScoreDiv = document.createElement("div");
-  playerScoreDiv.className = "player-score";
+  playerScoreDiv.className = "player-score form-group d-flex align-items-center";
   playerScoreDiv.innerHTML = `
-        <select class="player-select" required>
+        <select class="player-select form-control mr-2" required>
             <option value="">Select Player</option>
         </select>
-        <input type="number" class="player-score-input" placeholder="Score" required>
+        <input type="number" class="form-control player-score-input mr-2 w-25" placeholder="Score" required>
     `;
   playersContainer.appendChild(playerScoreDiv);
   populatePlayers();
@@ -54,6 +70,7 @@ document.getElementById("add-player-form").addEventListener("submit", async (e) 
   alert(await response.text());
   document.getElementById("add-player-form").reset();
   await populatePlayers();
+  await populatePlayerStatsDropdown();
 });
 
 document.getElementById("add-course-form").addEventListener("submit", async (e) => {
@@ -90,11 +107,11 @@ document.getElementById("add-game-form").addEventListener("submit", async (e) =>
   alert(await response.text());
   document.getElementById("add-game-form").reset();
   document.getElementById("players-container").innerHTML = `
-        <div class="player-score">
-            <select class="player-select" required>
+        <div class="player-score form-group d-flex align-items-center">
+            <select class="player-select form-control mr-2 w-75" required>
                 <option value="">Select Player</option>
             </select>
-            <input type="number" class="player-score-input" placeholder="Score" required>
+            <input type="number" class="form-control player-score-input mr-2 w-25" placeholder="Score" required>
         </div>
     `;
   await populatePlayers();
@@ -102,7 +119,7 @@ document.getElementById("add-game-form").addEventListener("submit", async (e) =>
 
 document.getElementById("get-player-stats-form").addEventListener("submit", async (e) => {
   e.preventDefault();
-  const player_id = document.getElementById("player-id").value;
+  const player_id = document.getElementById("player-select").value;
   const response = await fetch(`get_player_stats.php?player_id=${player_id}`);
   const stats = await response.json();
   const statsDiv = document.getElementById("player-stats");

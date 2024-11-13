@@ -26,3 +26,14 @@ CREATE TABLE scores (
     FOREIGN KEY (game_id) REFERENCES games(id),
     FOREIGN KEY (player_id) REFERENCES players(id)
 );
+
+CREATE TABLE users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(255) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL
+);
+
+
+-- Insert default admin user
+-- Password is 'admin'
+INSERT INTO users (username, password) VALUES ('admin', '$2y$10$EiM9poquBThgbBfgYJ9CIOLn4vqqv.lfXCnnqiAe3X/UuEVX1lQqG');
