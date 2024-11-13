@@ -50,14 +50,17 @@ document.getElementById("add-player-button").addEventListener("click", () => {
   const playerScoreDiv = document.createElement("div");
   playerScoreDiv.className = "player-score form-group";
   playerScoreDiv.innerHTML = `
-        <select class="player-select form-control mb-2" required>
-            <option value="">Select Player</option>
-        </select>
-        <div class="d-flex flex-wrap">
+        <div class="d-flex align-items-center mb-2">
+            <select class="player-select form-control mr-2" required>
+                <option value="">Select Player</option>
+            </select>
+            <input type="text" class="form-control total-score" placeholder="Total Score" readonly>
+        </div>
+        <div class="d-flex">
             ${Array.from(
               { length: 18 },
               (_, i) => `
-                <input type="number" class="form-control hole-score-input mr-2 mb-2" placeholder="H${
+                <input type="text" inputmode="numeric" class="form-control hole-score-input mr-2 mb-2" placeholder="H${
                   i + 1
                 }" required>
             `
@@ -66,6 +69,7 @@ document.getElementById("add-player-button").addEventListener("click", () => {
     `;
   playersContainer.appendChild(playerScoreDiv);
   populatePlayers();
+  addScoreInputListeners(playerScoreDiv);
 });
 
 document.getElementById("add-player-form").addEventListener("submit", async (e) => {
@@ -124,14 +128,17 @@ document.getElementById("add-game-form").addEventListener("submit", async (e) =>
   document.getElementById("add-game-form").reset();
   document.getElementById("players-container").innerHTML = `
         <div class="player-score form-group">
-            <select class="player-select form-control mb-2" required>
-                <option value="">Select Player</option>
-            </select>
-            <div class="d-flex flex-wrap">
+            <div class="d-flex align-items-center mb-2">
+                <select class="player-select form-control mr-2" required>
+                    <option value="">Select Player</option>
+                </select>
+                <input type="text" class="form-control total-score" placeholder="Total Score" readonly>
+            </div>
+            <div class="d-flex">
                 ${Array.from(
                   { length: 18 },
                   (_, i) => `
-                    <input type="number" class="form-control hole-score-input mr-2 mb-2" placeholder="H${
+                    <input type="text" inputmode="numeric" class="form-control hole-score-input mr-2 mb-2" placeholder="H${
                       i + 1
                     }" required>
                 `
@@ -160,4 +167,23 @@ document.getElementById("get-player-stats-form").addEventListener("submit", asyn
             `;
     });
   }
+});
+
+function addScoreInputListeners(playerScoreDiv) {
+  const holeInputs = playerScoreDiv.querySelectorAll(".hole-score-input");
+  const totalScoreInput = playerScoreDiv.querySelector(".total-score");
+
+  holeInputs.forEach((input) => {
+    input.addEventListener("input", () => {
+      const totalScore = Array.from(holeInputs).reduce(
+        (sum, input) => sum + (parseInt(input.value) || 0),
+        0
+      );
+      totalScoreInput.value = totalScore;
+    });
+  });
+}
+
+document.querySelectorAll(".player-score").forEach((playerScoreDiv) => {
+  addScoreInputListeners(playerScoreDiv);
 });

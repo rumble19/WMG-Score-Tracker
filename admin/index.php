@@ -58,17 +58,20 @@ if (!isLoggedIn()) {
             </div>
             <div id="players-container" class="mb-3">
                 <div class="player-score form-group">
-                    <select class="player-select form-control mb-2" required>
-                        <option value="">Select Player</option>
-                    </select>
-                    <div class="d-flex flex-wrap">
+                    <div class="d-flex align-items-center mb-2">
+                        <select class="player-select form-control mr-2" required>
+                            <option value="">Select Player</option>
+                        </select>
+                        <input type="text" class="form-control total-score" placeholder="Total Score" readonly>
+                    </div>
+                    <div class="d-flex">
                         <?php for ($i = 1; $i <= 18; $i++): ?>
-                            <input type="number" class="form-control hole-score-input mr-2 mb-2" id="hole<?= $i ?>-score" name="hole<?= $i ?>-score" placeholder="H<?= $i ?>" required>
+                            <input type="text" inputmode="numeric" class="form-control hole-score-input mr-2 mb-2" id="hole<?= $i ?>-score" name="hole<?= $i ?>-score" placeholder="H<?= $i ?>" required>
                         <?php endfor; ?>
                     </div>
                 </div>
             </div>
-            <button type="button" id="add-player-button" class="btn btn-secondary mb-3">Add Player</button>
+            <button type="button" id="add-player-button" class="btn btn-secondary mb-3 float-right">Add Player</button>
             <button type="submit" class="btn btn-primary">Submit Scores</button>
         </form>
 
