@@ -52,6 +52,7 @@ document.getElementById("add-player-form").addEventListener("submit", async (e) 
     body: `name=${name}`,
   });
   alert(await response.text());
+  document.getElementById("add-player-form").reset();
   await populatePlayers();
 });
 
@@ -66,6 +67,7 @@ document.getElementById("add-course-form").addEventListener("submit", async (e) 
     body: `name=${name}&short_id=${short_id}&par=${par}`,
   });
   alert(await response.text());
+  document.getElementById("add-course-form").reset();
   await populateCourses();
 });
 
@@ -86,6 +88,16 @@ document.getElementById("add-game-form").addEventListener("submit", async (e) =>
     )}`,
   });
   alert(await response.text());
+  document.getElementById("add-game-form").reset();
+  document.getElementById("players-container").innerHTML = `
+        <div class="player-score">
+            <select class="player-select" required>
+                <option value="">Select Player</option>
+            </select>
+            <input type="number" class="player-score-input" placeholder="Score" required>
+        </div>
+    `;
+  await populatePlayers();
 });
 
 document.getElementById("get-player-stats-form").addEventListener("submit", async (e) => {
