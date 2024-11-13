@@ -48,12 +48,21 @@ async function populatePlayerStatsDropdown() {
 document.getElementById("add-player-button").addEventListener("click", () => {
   const playersContainer = document.getElementById("players-container");
   const playerScoreDiv = document.createElement("div");
-  playerScoreDiv.className = "player-score form-group d-flex align-items-center";
+  playerScoreDiv.className = "player-score form-group";
   playerScoreDiv.innerHTML = `
-        <select class="player-select form-control mr-2" required>
+        <select class="player-select form-control mb-2" required>
             <option value="">Select Player</option>
         </select>
-        <input type="number" class="form-control player-score-input mr-2 w-25" placeholder="Score" required>
+        <div class="d-flex flex-wrap">
+            ${Array.from(
+              { length: 18 },
+              (_, i) => `
+                <input type="number" class="form-control hole-score-input mr-2 mb-2" placeholder="H${
+                  i + 1
+                }" required>
+            `
+            ).join("")}
+        </div>
     `;
   playersContainer.appendChild(playerScoreDiv);
   populatePlayers();
@@ -91,11 +100,13 @@ document.getElementById("add-course-form").addEventListener("submit", async (e) 
 document.getElementById("add-game-form").addEventListener("submit", async (e) => {
   e.preventDefault();
   const course_id = document.getElementById("course-select").value;
-  const playerScores = {};
+  const playerScores = [];
   document.querySelectorAll(".player-score").forEach((div) => {
     const player_id = div.querySelector(".player-select").value;
-    const score = div.querySelector(".player-score-input").value;
-    playerScores[player_id] = score;
+    const holeScores = Array.from(div.querySelectorAll(".hole-score-input")).map(
+      (input) => parseInt(input.value)
+    );
+    playerScores.push({ player_id, holeScores });
   });
   const response = await fetch("add_game.php", {
     method: "POST",
@@ -104,14 +115,28 @@ document.getElementById("add-game-form").addEventListener("submit", async (e) =>
       JSON.stringify(playerScores)
     )}`,
   });
-  alert(await response.text());
+  const result = await response.json();
+  if (result.success) {
+    alert(result.success);
+  } else {
+    alert(result.error);
+  }
   document.getElementById("add-game-form").reset();
   document.getElementById("players-container").innerHTML = `
-        <div class="player-score form-group d-flex align-items-center">
-            <select class="player-select form-control mr-2 w-75" required>
+        <div class="player-score form-group">
+            <select class="player-select form-control mb-2" required>
                 <option value="">Select Player</option>
             </select>
-            <input type="number" class="form-control player-score-input mr-2 w-25" placeholder="Score" required>
+            <div class="d-flex flex-wrap">
+                ${Array.from(
+                  { length: 18 },
+                  (_, i) => `
+                    <input type="number" class="form-control hole-score-input mr-2 mb-2" placeholder="H${
+                      i + 1
+                    }" required>
+                `
+                ).join("")}
+            </div>
         </div>
     `;
   await populatePlayers();
@@ -124,7 +149,15 @@ document.getElementById("get-player-stats-form").addEventListener("submit", asyn
   const stats = await response.json();
   const statsDiv = document.getElementById("player-stats");
   statsDiv.innerHTML = "<h2>Player Stats</h2>";
-  stats.forEach((stat) => {
-    statsDiv.innerHTML += `<p>Course: ${stat.name}, Date: ${stat.date_played}, Score: ${stat.score}</p>`;
-  });
+  if (stats.error) {
+    statsDiv.innerHTML += `<p>${stats.error}</p>`;
+  } else {
+    stats.forEach((stat) => {
+      statsDiv.innerHTML += `
+                <p>Course: ${stat.name}, Date: ${stat.date_played}</p>
+                <p>Scores: ${stat.hole1_score}, ${stat.hole2_score}, ${stat.hole3_score}, ${stat.hole4_score}, ${stat.hole5_score}, ${stat.hole6_score}, ${stat.hole7_score}, ${stat.hole8_score}, ${stat.hole9_score}, ${stat.hole10_score}, ${stat.hole11_score}, ${stat.hole12_score}, ${stat.hole13_score}, ${stat.hole14_score}, ${stat.hole15_score}, ${stat.hole16_score}, ${stat.hole17_score}, ${stat.hole18_score}</p>
+                <p>Total Score: ${stat.total_score}</p>
+            `;
+    });
+  }
 });

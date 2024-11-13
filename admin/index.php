@@ -21,6 +21,11 @@ if (!isLoggedIn()) {
 <body>
     <div class="container">
         <h1 class="mt-5">Minigolf Tracker Admin</h1>
+        <?php if (isset($_GET['import_success']) && $_GET['import_success'] == 1): ?>
+            <div class="alert alert-success" role="alert">
+                Courses imported successfully!
+            </div>
+        <?php endif; ?>
         <a href="register.php" class="btn btn-secondary mb-4">Register New Admin</a>
         <form id="add-player-form" class="mb-4">
             <h2>Add Player</h2>
@@ -52,14 +57,18 @@ if (!isLoggedIn()) {
                 </select>
             </div>
             <div id="players-container" class="mb-3">
-                <div class="player-score form-group d-flex align-items-center">
-                    <select class="player-select form-control mr-2" required>
+                <div class="player-score form-group">
+                    <select class="player-select form-control mb-2" required>
                         <option value="">Select Player</option>
                     </select>
-                    <input type="number" class="form-control player-score-input mr-2 w-25" placeholder="Score" required>
+                    <div class="d-flex flex-wrap">
+                        <?php for ($i = 1; $i <= 18; $i++): ?>
+                            <input type="number" class="form-control hole-score-input mr-2 mb-2" id="hole<?= $i ?>-score" name="hole<?= $i ?>-score" placeholder="H<?= $i ?>" required>
+                        <?php endfor; ?>
+                    </div>
                 </div>
             </div>
-            <button type="button" id="add-player-button" class="btn btn-secondary mb-3 float-right">Add Player</button>
+            <button type="button" id="add-player-button" class="btn btn-secondary mb-3">Add Player</button>
             <button type="submit" class="btn btn-primary">Submit Scores</button>
         </form>
 
@@ -74,6 +83,14 @@ if (!isLoggedIn()) {
         </form>
 
         <div id="player-stats"></div>
+
+        <form id="import-courses-form" class="mb-4" method="post" action="import_courses.php" enctype="multipart/form-data">
+            <h2>Import Courses</h2>
+            <div class="form-group">
+                <input type="file" class="form-control-file" id="courses-csv" name="courses-csv" accept=".csv" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Import Courses</button>
+        </form>
     </div>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
